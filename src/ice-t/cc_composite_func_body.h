@@ -105,6 +105,29 @@
 #define CCC_FRONT_COMPRESSED_IMAGE FRONT_SPARSE_IMAGE
 #define CCC_BACK_COMPRESSED_IMAGE BACK_SPARSE_IMAGE
 #define CCC_DEST_COMPRESSED_IMAGE DEST_SPARSE_IMAGE
+
+#if ICET_ADD_FRAMEBUFFERS
+
+#define CCC_COMPOSITE(src1_pointer, src2_pointer, dest_pointer)         \
+    {                                                                   \
+        const IceTFloat *src1_color;                                    \
+        const IceTFloat *src1_depth;                                    \
+        const IceTFloat *src2_color;                                    \
+        const IceTFloat *src2_depth;                                    \
+        IceTFloat *dest_color;                                          \
+        IceTFloat *dest_depth;                                          \
+        UNPACK_PIXEL(src1_pointer, src1_color, src1_depth);             \
+        UNPACK_PIXEL(src2_pointer, src2_color, src2_depth);             \
+        UNPACK_PIXEL(dest_pointer, dest_color, dest_depth);             \
+				dest_color[0] = src1_color[0] + src2_color[0]; 									\
+				dest_color[1] = src1_color[1] + src2_color[1]; 									\
+				dest_color[2] = src1_color[2] + src2_color[2]; 									\
+				dest_color[3] = src1_color[3] + src2_color[3]; 									\
+				dest_depth[0] = src1_depth[0];                              		\
+    }
+
+#else
+
 #define CCC_COMPOSITE(src1_pointer, src2_pointer, dest_pointer)         \
     {                                                                   \
         const IceTFloat *src1_color;                                    \
@@ -130,6 +153,9 @@
             dest_depth[0] = src2_depth[0];                              \
         }                                                               \
     }
+
+#endif
+
 #define CCC_PIXEL_SIZE (5*sizeof(IceTFloat))
 #include "cc_composite_template_body.h"
 #undef UNPACK_PIXEL

@@ -42,6 +42,14 @@ SET(CMAKE_MODULE_PATH
   ${CMAKE_SOURCE_DIR}/cmake
   )
 
+OPTION(ADD_FBS "Add, rather than composite" OFF)
+
+if(ADD_FBS)
+	add_definitions(-DICET_ADD_FRAMEBUFFERS=1)
+else()
+	add_definitions(-DICET_ADD_FRAMEBUFFERS=0)
+endif()
+
 # Turn shared libraries on or off.
 OPTION(BUILD_SHARED_LIBS "Build IceT with shared libraries." OFF)
 SET(ICET_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
